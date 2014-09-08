@@ -6,7 +6,14 @@ class LinkLockerController {
 	public $user_model;
 
 	public function __construct() {
-		// check for a user?
+		session_start();
+
+		$user_id = null;
+
+		//check if the user is logged in
+		if (isset($_SESSION['user_id'])) {
+			$user_id = $_SESSION['user_id'];
+		}
 	}
 
 	/**
@@ -26,8 +33,8 @@ class LinkLockerController {
 				$this->index();
 				break;
 			
-			case "register":
-				$this->add();
+			case "registration":
+				$this->registration();
 				break;
 
 			default:
@@ -36,13 +43,11 @@ class LinkLockerController {
 		}
 	}
 
-	/**
-	* index
-	*
-	* Display the application to the user.
-	*
-	**/
 	public function index() {
+		$this->renderView('login');
+	}
+
+	public function registration() {
 		$this->renderView('registration');
 	}
 
