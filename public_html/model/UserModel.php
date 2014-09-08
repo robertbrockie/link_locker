@@ -37,6 +37,21 @@
 			return $this->loadFromRow($row);
 		}
 
+		public function getByEmailAndPassword($email, $password) {
+			$query = sprintf("SELECT * FROM user WHERE email = '%s' AND password = '%s'",
+				mysql_real_escape_string($email),
+				mysql_real_escape_string($password));
+
+			$row = $this->db->query($query);
+
+			if ($row) {
+				return $this->loadFromRow($row);	
+			} else {
+				error_log('Could not find user for email: '.$email.' and password: '.$password);
+				return null;
+			}
+		}
+
 		public function save($user) {
 			// Insert the new user
 			$query = sprintf("INSERT INTO user (email, password, username) VALUES ('%s', '%s', '%s')",

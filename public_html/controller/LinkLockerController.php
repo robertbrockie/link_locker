@@ -30,11 +30,15 @@ class LinkLockerController {
 		$vals = array_merge($_POST, $_GET);
 		
 		//what are we doing?
-		$action = isset($vals['action']) ? $vals['action'] : "index";
+		$action = isset($vals['action']) ? $vals['action'] : "login";
 
 		switch ($action) {
-			case "index":
-				$this->index();
+			case 'login':
+				$this->login();
+				break;
+
+			case 'logout':
+				$this->logout();
 				break;
 			
 			case "registration":
@@ -47,14 +51,36 @@ class LinkLockerController {
 		}
 	}
 
-	public function index() {
+	public function login() {
+		if ($this->user) {
+			$this->renderView('dashboard');
+		} else if (empty($_POST)) {
+			$this->renderView('login');
+		} else {
+			//TODO: add validation
+			$username = $_POST['email'];
+			$password = $_POST['password'];
+
+			$user = $this->user_model->getByEmailAndPassword($username, $password);
+
+			if ($user) {
+				$this->loginUser($user);
+				$this->renderView('dashboard');
+			} else {
+				$this->renderView('login');
+			}
+		}
+	}
+
+	public function logout() {
+		session_destroy();
+		$this->user_id = null;
+		$this->user = null;
+
 		$this->renderView('login');
 	}
 
 	public function registration() {
-
-		$data = array_merge($_POST, $_GET);
-
 		if (empty($_POST)) {
 			$this->renderView('registration');
 		} else {
@@ -74,7 +100,17 @@ class LinkLockerController {
 		}
 	}
 
+	public function dashboard() {
+		$this->renderView('dashboard');
+	}
+
 	public function renderView($view) {
+		$data = array();
+
+		if ($this->user) {
+			$data['user'] = $this->user;
+		}
+
 		include('templates/common/header.php');
 		include('templates/'.$view.'.php');
 		include('templates/common/footer.php');

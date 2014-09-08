@@ -1,6 +1,6 @@
 <div class="login">
 	<h1>Login</h1>
-	<form>
+	<form method="post" action="<?= $_SERVER["PHP_SELF"].'?action=login' ?>">
 		<p>
 			<label for="email">Email:</label>
 			<input type="text" name="email"/>

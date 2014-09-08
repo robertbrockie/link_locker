@@ -19,5 +19,9 @@
 		<p>
 			<input type="submit" value="Register"/>
 		</p>
+
+		<p>
+			<a href="index.php?action=login">Login Here</a>
+		</p>
 	</form>
 </div>
