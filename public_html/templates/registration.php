@@ -1,6 +1,6 @@
 <div class="registration">
 	<h1>Link Locker Registration</h1>
-	<form>
+	<form method="post" action="<?= $_SERVER["PHP_SELF"].'?action=registration' ?>">
 		<p>
 			<label for="email">Email:</label>
 			<input type="text" name="email"/>
@@ -14,6 +14,10 @@
 		<p>
 			<label for="username">Username:</label>
 			<input type="username" name="username"/>
+		</p>
+
+		<p>
+			<input type="submit" value="Register"/>
 		</p>
 	</form>
 </div>

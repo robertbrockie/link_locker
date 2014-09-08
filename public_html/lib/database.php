@@ -41,8 +41,9 @@
 	}
 
 	public function query($query) {
-		$this->result=mysql_query($query, $this->connection_id) or $this->query_error();
-		return $this->result;
+		$this->result = mysql_query($query, $this->connection_id) or $this->query_error();
+
+		return mysql_fetch_assoc($this->result);
 	}
 
 	public function insert($query) {

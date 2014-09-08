@@ -20,7 +20,7 @@
 		}
 
 		public function setEmail($value) {
-			$this->id = $value;
+			$this->email = $value;
 		}
 
 		public function getPassword() {

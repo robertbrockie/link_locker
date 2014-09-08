@@ -1,18 +1,22 @@
 <?php
+session_start();
+
+include_once('model/UserModel.php');
 
 class LinkLockerController {
 	
-	public $user;
+	public $user_id;
+	public $user = null;
 	public $user_model;
 
 	public function __construct() {
-		session_start();
-
-		$user_id = null;
+		$this->user_model = new UserModel();
 
 		//check if the user is logged in
 		if (isset($_SESSION['user_id'])) {
-			$user_id = $_SESSION['user_id'];
+			$this->user_id = $_SESSION['user_id'];
+
+			$this->user = $this->user_model->load($this->user_id);
 		}
 	}
 
@@ -48,12 +52,36 @@ class LinkLockerController {
 	}
 
 	public function registration() {
-		$this->renderView('registration');
+
+		$data = array_merge($_POST, $_GET);
+
+		if (empty($_POST)) {
+			$this->renderView('registration');
+		} else {
+			//TODO: add validation
+			$user = new User();
+			$user->setEmail($_POST['email']);
+			$user->setPassword($_POST['password']);
+			$user->setUsername($_POST['username']);
+
+			$user = $this->user_model->save($user);
+
+			$this->loginUser($user);
+
+			echo '<pre>'.print_r($user, true);
+
+			$this->renderView('dashboard');
+		}
 	}
 
 	public function renderView($view) {
 		include('templates/common/header.php');
 		include('templates/'.$view.'.php');
 		include('templates/common/footer.php');
+	}
+
+	protected function loginUser($user) {
+		$_SESSION['user_id'] = $user->getId();
+		$this->user = $user;
 	}
 }
