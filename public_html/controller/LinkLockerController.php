@@ -1,22 +1,25 @@
 <?php
 session_start();
 
+include_once('model/LinkModel.php');
 include_once('model/UserModel.php');
 
 class LinkLockerController {
 	
+	public $links = array();
 	public $user_id;
 	public $user = null;
-	public $user_model;
 
 	public function __construct() {
 		$this->user_model = new UserModel();
+		$this->link_model = new LinkModel();
 
 		//check if the user is logged in
 		if (isset($_SESSION['user_id'])) {
 			$this->user_id = $_SESSION['user_id'];
 
 			$this->user = $this->user_model->load($this->user_id);
+			$this->links = $this->link_model->getAll($this->user_id);
 		}
 	}
 
@@ -45,10 +48,30 @@ class LinkLockerController {
 				$this->registration();
 				break;
 
+			case "add_link":
+				$this->addLink();
+				break;
+
 			default:
 				error_log('Unknown action: '.$action);
 				break;
 		}
+	}
+
+	public function addLink() {
+		if (!$this->user) {
+			$this->renderView('login');
+		} else if (empty($_POST)) {
+			$this->renderView('dashboard');
+		} else {
+			// TODO: add validation
+			$link = new Link();
+			$link->setUrl($_POST['url']);
+			//TODO:scrape title, and image later
+			$this->link_model->save($link);
+		}
+
+		$this->renderView('dashboard');
 	}
 
 	public function login() {

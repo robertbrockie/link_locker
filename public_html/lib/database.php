@@ -18,7 +18,7 @@
 	public $connection_id;
 
 	public function connect() {
-		$this->connection_id=mysql_pconnect($this->hostname, $this->username, $this->password) 
+		$this->connection_id = mysql_pconnect($this->hostname, $this->username, $this->password) 
 			or $this->connection_error();
 
 		mysql_select_db($this->database, $this->connection_id);
